@@ -54,7 +54,6 @@ Pour chaque exercice :
 
 _Votre réponse pour l'exercice 1 :_
 ```
-Expliquez votre solution ici
 usePosts récupère les posts avec fetch (limit/skip pour la pagination),
 /posts/search?q= si recherche sinon /posts. PostList les affiche en cartes,
 PostSearch met à jour la recherche avec un bouton pour effacer.
@@ -73,7 +72,6 @@ PostSearch met à jour la recherche avec un bouton pour effacer.
 
 _Votre réponse pour l'exercice 2 :_
 ```
-Expliquez votre solution ici
 useDebounce ne renvoie une valeur qu'après un délai : il relance un setTimeout à
 chaque changement et annule le précédent au nettoyage, ce qui évite un appel API
 à chaque lettre. useLocalStorage fonctionne comme useState mais persiste la donnée
@@ -93,9 +91,15 @@ recherche et garder le mode de défilement après rechargement.
 
 _Votre réponse pour l'exercice 3 :_
 ```
-Expliquez votre solution ici
-[Ajoutez vos captures d'écran]
+J'ai créé un ThemeContext avec createContext et useContext pour gérer le thème
+clair/sombre dans toute l'application. Le thème est sauvegardé avec useLocalStorage
+(il reste après un rechargement) et appliqué avec l'attribut data-bs-theme de
+Bootstrap. Le composant ThemeToggle utilise useTheme pour changer de thème.
+Pour optimiser, j'ai utilisé useCallback pour les fonctions, useMemo pour la
+valeur du contexte, et React.memo sur PostList et PostSearch.
 ```
+![](screenshots/6th.png)
+![](screenshots/7th.png)
 
 ### Exercice 4 : Fonctionnalités avancées
 #### Objectif : Ajouter des fonctionnalités de chargement et détail
