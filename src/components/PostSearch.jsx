@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 
-function PostSearch({ onSearch }) {
+function PostSearch({ onSearch, onTagSelect, availableTags = [], selectedTag = '' }) {
   const [searchInput, setSearchInput] = useState('');
 
   const handleSearchChange = useCallback((e) => {
@@ -13,6 +13,10 @@ function PostSearch({ onSearch }) {
     setSearchInput('');
     onSearch('');
   }, [onSearch]);
+
+  const handleTagSelect = useCallback((e) => {
+    if (onTagSelect) onTagSelect(e.target.value);
+  }, [onTagSelect]);
 
   return (
     <div className="mb-4">
@@ -41,6 +45,20 @@ function PostSearch({ onSearch }) {
               </button>
             )}
           </div>
+        </div>
+
+        <div className="col-md-4">
+          <select
+            className="form-select"
+            value={selectedTag}
+            onChange={handleTagSelect}
+            aria-label="Filtrer par tag"
+          >
+            <option value="">Tous les tags</option>
+            {availableTags.map((tag) => (
+              <option key={tag} value={tag}>{tag}</option>
+            ))}
+          </select>
         </div>
       </div>
     </div>

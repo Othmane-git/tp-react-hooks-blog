@@ -1,48 +1,54 @@
-import React from 'react';
-// TODO: Exercice 3 - Importer useTheme
+import React, { useMemo } from 'react';
+import { useTheme } from '../context/ThemeContext';
 
-/**
- * Composant d'affichage détaillé d'un post
- * @param {Object} props - Propriétés du composant
- * @param {Object} props.post - Le post à afficher
- * @param {Function} props.onClose - Fonction pour fermer les détails
- * @param {Function} props.onTagClick - Fonction appelée lors du clic sur un tag
- */
 function PostDetails({ post, onClose, onTagClick }) {
-  // TODO: Exercice 3 - Utiliser le hook useTheme
-  
-  // TODO: Exercice 3 - Utiliser useMemo pour calculer les classes CSS
-  const themeClasses = {
-    card: '',
-    badge: '',
-    button: ''
-  };
-  
+  const { theme } = useTheme();
+
+  const themeClasses = useMemo(() => ({
+    card: theme === 'dark' ? 'border-secondary' : '',
+    badge: theme === 'dark' ? 'bg-light text-dark' : 'bg-secondary'
+  }), [theme]);
+
   if (!post) return null;
-  
+
+  const reactions =
+    typeof post.reactions === 'object'
+      ? (post.reactions.likes ?? 0) + (post.reactions.dislikes ?? 0)
+      : post.reactions;
+
   return (
-    <div className="card mb-4">
+    <div className={`card mb-4 ${themeClasses.card}`}>
       <div className="card-header d-flex justify-content-between align-items-center">
         <h5 className="card-title mb-0">{post.title}</h5>
-        <button 
-          className="btn btn-sm"
-          onClick={onClose}
-          aria-label="Fermer"
-        >
+        <button className="btn btn-sm" onClick={onClose} aria-label="Fermer">
           <i className="bi bi-x-lg"></i>
         </button>
       </div>
-      
+
       <div className="card-body">
-        {/* TODO: Exercice 4 - Afficher le contenu du post */}
-        
-        {/* TODO: Exercice 4 - Afficher les réactions et l'utilisateur */}
-        
-        {/* TODO: Exercice 4 - Afficher les tags */}
+        <p className="card-text">{post.body}</p>
+
+        <div className="d-flex gap-3 text-muted mb-3">
+          <span><i className="bi bi-hand-thumbs-up"></i> {reactions} réactions</span>
+          {post.userId && <span><i className="bi bi-person"></i> Utilisateur #{post.userId}</span>}
+          {post.views != null && <span><i className="bi bi-eye"></i> {post.views} vues</span>}
+        </div>
+
+        <div>
+          {post.tags?.map((tag) => (
+            <span
+              key={tag}
+              className={`badge me-1 ${themeClasses.badge}`}
+              onClick={() => onTagClick && onTagClick(tag)}
+              style={{ cursor: 'pointer' }}
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
       </div>
     </div>
   );
 }
 
-// TODO: Exercice 3 - Utiliser React.memo pour optimiser les rendus
-export default PostDetails;
+export default React.memo(PostDetails);

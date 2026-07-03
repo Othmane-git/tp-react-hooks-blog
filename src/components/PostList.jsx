@@ -1,19 +1,7 @@
-import React from 'react';
-// TODO: Exercice 3 - Importer useTheme
-// TODO: Exercice 4 - Importer useIntersectionObserver
+import React, { useCallback, useEffect } from 'react';
 import LoadingSpinner from './LoadingSpinner';
+import useIntersectionObserver from '../hooks/useIntersectionObserver';
 
-/**
- * Composant d'affichage de la liste des posts
- * @param {Object} props - Propriétés du composant
- * @param {Array} props.posts - Liste des posts à afficher
- * @param {boolean} props.loading - Indicateur de chargement
- * @param {boolean} props.hasMore - Indique s'il y a plus de posts à charger
- * @param {Function} props.onLoadMore - Fonction pour charger plus de posts
- * @param {Function} props.onPostClick - Fonction appelée au clic sur un post
- * @param {Function} props.onTagClick - Fonction appelée au clic sur un tag
- * @param {boolean} props.infiniteScroll - Mode de défilement infini activé ou non
- */
 function PostList({
   posts = [],
   loading = false,
@@ -23,25 +11,26 @@ function PostList({
   onTagClick,
   infiniteScroll = true
 }) {
-  // TODO: Exercice 3 - Utiliser le hook useTheme
+  const [sentinelRef, isVisible] = useIntersectionObserver({
+    enabled: infiniteScroll && hasMore && !loading,
+    rootMargin: '200px'
+  });
 
-  // TODO: Exercice 4 - Utiliser useIntersectionObserver pour le défilement infini
-
-  // TODO: Exercice 3 - Utiliser useCallback pour les gestionnaires d'événements
-  const handlePostClick = (post) => {
-    if (onPostClick) {
-      onPostClick(post);
+  useEffect(() => {
+    if (isVisible && infiniteScroll && hasMore && !loading && onLoadMore) {
+      onLoadMore();
     }
-  };
+  }, [isVisible, infiniteScroll, hasMore, loading, onLoadMore]);
 
-  const handleTagClick = (e, tag) => {
-    e.stopPropagation(); // Éviter de déclencher le clic sur le post
-    if (onTagClick) {
-      onTagClick(tag);
-    }
-  };
+  const handlePostClick = useCallback((post) => {
+    if (onPostClick) onPostClick(post);
+  }, [onPostClick]);
 
-  // TODO: Exercice 1 - Gérer le cas où il n'y a pas de posts
+  const handleTagClick = useCallback((e, tag) => {
+    e.stopPropagation();
+    if (onTagClick) onTagClick(tag);
+  }, [onTagClick]);
+
   if (!loading && posts.length === 0) {
     return <p className="text-center text-muted my-4">Aucun article trouvé.</p>;
   }
@@ -76,6 +65,8 @@ function PostList({
 
       {loading && <LoadingSpinner />}
 
+      {infiniteScroll && hasMore && <div ref={sentinelRef} style={{ height: '1px' }} />}
+
       {!infiniteScroll && hasMore && !loading && (
         <div className="text-center my-3">
           <button className="btn btn-primary" onClick={onLoadMore}>
@@ -87,5 +78,4 @@ function PostList({
   );
 }
 
-// TODO: Exercice 3 - Utiliser React.memo pour optimiser les rendus
-export default PostList;
+export default React.memo(PostList);

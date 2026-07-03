@@ -1,20 +1,26 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import useDebounce from './useDebounce';
 
-function usePosts({ searchTerm = '', limit = 10 } = {}) {
+function usePosts({ searchTerm = '', tag = '', limit = 10 } = {}) {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [total, setTotal] = useState(0);
+  const [selectedPost, setSelectedPost] = useState(null);
 
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   const buildApiUrl = useCallback((skip = 0) => {
-    const base = debouncedSearchTerm
-      ? `https://dummyjson.com/posts/search?q=${encodeURIComponent(debouncedSearchTerm)}&`
-      : 'https://dummyjson.com/posts?';
-    return `${base}limit=${limit}&skip=${skip}`;
-  }, [debouncedSearchTerm, limit]);
+    let url;
+    if (debouncedSearchTerm) {
+      url = `https://dummyjson.com/posts/search?q=${encodeURIComponent(debouncedSearchTerm)}&`;
+    } else if (tag) {
+      url = `https://dummyjson.com/posts/tag/${encodeURIComponent(tag)}?`;
+    } else {
+      url = 'https://dummyjson.com/posts?';
+    }
+    return `${url}limit=${limit}&skip=${skip}`;
+  }, [debouncedSearchTerm, tag, limit]);
 
   const fetchPosts = useCallback(async (skip = 0, replace = false) => {
     try {
@@ -42,7 +48,29 @@ function usePosts({ searchTerm = '', limit = 10 } = {}) {
 
   const hasMore = posts.length < total;
 
-  return { posts, loading, error, hasMore, loadMore, total };
+  const availableTags = useMemo(() => {
+    const set = new Set();
+    posts.forEach((p) => p.tags?.forEach((t) => set.add(t)));
+    return Array.from(set).sort();
+  }, [posts]);
+
+  const fetchPostById = useCallback(async (id) => {
+    try {
+      const res = await fetch(`https://dummyjson.com/posts/${id}`);
+      if (!res.ok) throw new Error('Erreur lors du chargement du post');
+      const data = await res.json();
+      setSelectedPost(data);
+    } catch (err) {
+      setError(err.message);
+    }
+  }, []);
+
+  const clearSelectedPost = useCallback(() => setSelectedPost(null), []);
+
+  return {
+    posts, loading, error, hasMore, loadMore, total,
+    availableTags, selectedPost, fetchPostById, clearSelectedPost
+  };
 }
 
 export default usePosts;

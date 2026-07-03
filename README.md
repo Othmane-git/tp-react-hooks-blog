@@ -111,9 +111,14 @@ valeur du contexte, et React.memo sur PostList et PostSearch.
 
 _Votre réponse pour l'exercice 4 :_
 ```
-Expliquez votre solution ici
-[Ajoutez vos captures d'écran]
+J'ai créé le hook useIntersectionObserver qui détecte quand un élément apparaît
+à l'écran. Dans PostList, je mets un élément vide en bas de la liste : quand il
+devient visible, loadMore charge la suite (défilement infini). Le composant
+PostDetails affiche les détails d'un post (contenu, réactions, tags) au clic,
+récupéré avec /posts/{id}. Pour les tags, j'utilise /posts/tag/{tag} et je liste
+les tags disponibles dans un menu déroulant.
 ```
+![](screenshots/8th.png)
 
 ## Structure détaillée du projet
 
