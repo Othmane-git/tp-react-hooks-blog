@@ -55,7 +55,10 @@ Pour chaque exercice :
 _Votre réponse pour l'exercice 1 :_
 ```
 Expliquez votre solution ici
-[Ajoutez vos captures d'écran]
+usePosts récupère les posts avec fetch (limit/skip pour la pagination),
+/posts/search?q= si recherche sinon /posts. PostList les affiche en cartes,
+PostSearch met à jour la recherche avec un bouton pour effacer.
+![](screenshots/1st.png)
 ```
 
 ### Exercice 2 : Hooks Personnalisés
