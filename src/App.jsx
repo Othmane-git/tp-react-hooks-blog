@@ -49,7 +49,7 @@ function App() {
 
         {/* TODO: Exercice 1 - Passer les props nécessaires à PostList */}
         <PostList
-          posts={posts}
+          posts={posts} 
           loading={loading}
           hasMore={hasMore}
           onLoadMore={loadMore}
