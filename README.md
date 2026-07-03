@@ -58,8 +58,8 @@ Expliquez votre solution ici
 usePosts récupère les posts avec fetch (limit/skip pour la pagination),
 /posts/search?q= si recherche sinon /posts. PostList les affiche en cartes,
 PostSearch met à jour la recherche avec un bouton pour effacer.
-![](screenshots/1st.png)
 ```
+![](screenshots/1st.png)
 
 ### Exercice 2 : Hooks Personnalisés
 #### Objectif : Créer des hooks réutilisables
