@@ -11,8 +11,25 @@ function useLocalStorage(key, initialValue) {
   // 1. Initialiser l'état avec la valeur du localStorage ou la valeur initiale
   // 2. Mettre à jour localStorage quand la valeur change
   // 3. Retourner la valeur et la fonction de mise à jour
+
+  const [storedValue, setStoredValue] = useState(() => {
+    try {
+      const item = window.localStorage.getItem(key);
+      return item !== null ? JSON.parse(item) : initialValue;
+    } catch {
+      return initialValue;
+    }
+  });
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(key, JSON.stringify(storedValue));
+    } catch {
+      
+    }
+  }, [key, storedValue]);
   
-  return [initialValue, () => {}]; // À modifier
+  return [storedValue, setStoredValue];
 }
 
 export default useLocalStorage;

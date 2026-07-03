@@ -7,6 +7,7 @@ import PostSearch from './components/PostSearch';
 // TODO: Exercice 1 - Importer le hook usePosts
 import usePosts from './hooks/usePosts';
 // TODO: Exercice 2 - Importer le hook useLocalStorage
+import useLocalStorage from './hooks/useLocalStorage';
 
 function App() {
   // État local pour la recherche
@@ -19,6 +20,7 @@ function App() {
   // Exemple: const { posts, loading, error } = usePosts();
 
   // TODO: Exercice 2 - Utiliser useLocalStorage pour le mode de défilement
+  const [infiniteScroll, setInfiniteScroll] = useLocalStorage('infiniteScroll', true);
 
   // TODO: Exercice 3 - Utiliser useCallback pour les gestionnaires d'événements
 
@@ -48,12 +50,26 @@ function App() {
         {/* TODO: Exercice 4 - Ajouter le composant PostDetails */}
 
         {/* TODO: Exercice 1 - Passer les props nécessaires à PostList */}
+
+        <div className="form-check form-switch mb-3">
+            <input
+              className="form-check-input"
+              type="checkbox"
+              id="scrollMode"
+              checked={infiniteScroll}
+              onChange={(e) => setInfiniteScroll(e.target.checked)}
+            />
+            <label className="form-check-label" htmlFor="scrollMode">
+              Défilement infini
+            </label>
+          </div>
+          
         <PostList
           posts={posts} 
           loading={loading}
           hasMore={hasMore}
           onLoadMore={loadMore}
-          infiniteScroll={false}
+          infiniteScroll={infiniteScroll}
         />
       </main>
 

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 // TODO: Exercice 2 - Importer useDebounce
+import useDebounce from './useDebounce';
 
 /**
  * Hook personnalisé pour gérer les posts du blog
@@ -17,16 +18,17 @@ function usePosts({ searchTerm = '', tag = '', limit = 10, infinite = true } = {
   const [error, setError] = useState(null);
   const [skip, setSkip] = useState(0);
   const [total, setTotal] = useState(0);
-  // TODO: Exercice 1 - Ajouter les états nécessaires pour la pagination
-  const buildApiUrl = (skipValue = 0) => {
-    const base = searchTerm
-      ? `https://dummyjson.com/posts/search?q=${encodeURIComponent(searchTerm)}&`
-      : 'https://dummyjson.com/posts?';
-    return `${base}limit=${limit}&skip=${skipValue}`;
-  };
   // TODO: Exercice 4 - Ajouter l'état pour le post sélectionné
 
   // TODO: Exercice 2 - Utiliser useDebounce pour le terme de recherche
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+
+  const buildApiUrl = (skip = 0) => {
+    const base = debouncedSearchTerm
+      ? `https://dummyjson.com/posts/search?q=${encodeURIComponent(debouncedSearchTerm)}&`
+      : 'https://dummyjson.com/posts?';
+    return `${base}limit=${limit}&skip=${skip}`;
+  };
 
   // TODO: Exercice 3 - Utiliser useCallback pour construire l'URL de l'API
 

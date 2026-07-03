@@ -60,6 +60,8 @@ usePosts récupère les posts avec fetch (limit/skip pour la pagination),
 PostSearch met à jour la recherche avec un bouton pour effacer.
 ```
 ![](screenshots/1st.png)
+![](screenshots/2nd.png)
+![](screenshots/3rd.png)
 
 ### Exercice 2 : Hooks Personnalisés
 #### Objectif : Créer des hooks réutilisables
@@ -72,8 +74,14 @@ PostSearch met à jour la recherche avec un bouton pour effacer.
 _Votre réponse pour l'exercice 2 :_
 ```
 Expliquez votre solution ici
-[Ajoutez vos captures d'écran]
+useDebounce ne renvoie une valeur qu'après un délai : il relance un setTimeout à
+chaque changement et annule le précédent au nettoyage, ce qui évite un appel API
+à chaque lettre. useLocalStorage fonctionne comme useState mais persiste la donnée
+(lecture au démarrage, écriture dans un useEffect). Utilisés pour débouncer la
+recherche et garder le mode de défilement après rechargement.
 ```
+![](screenshots/4th.png)
+![](screenshots/5th.png)
 
 ### Exercice 3 : Optimisation et Context
 #### Objectif : Gérer le thème global et optimiser les rendus
